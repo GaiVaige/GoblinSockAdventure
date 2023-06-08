@@ -15,11 +15,20 @@ public class Player_Movement_SCript_2 : MonoBehaviour
 
     public float moveSpeed;
     public float dragSpeed;
-    float horizontalInput;
-    float verticalInput;
+    public float horizontalInput;
+    public float verticalInput;
     public float jumpForce;
+    float airDampFactor;
     public Transform orientation;
+    public Transform modelOrientation;
+    public Animator anim;
     Vector3 moveDirection;
+    public float jumpTimeOut;
+    public float jumpTimer;
+    public bool canJump;
+    public float postJumpTimeOut; // checks if player can jump after already jumping
+    public float postJumpTimer;
+    public bool isJumping;
 
     [Header("Camera")]
     public GameObject cameraGrab;
@@ -31,6 +40,8 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        canJump = true;
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -74,30 +85,59 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         
             float springForce = (x * springStrength) - (relVel * springDamper);
             Debug.Log(springForce);
-        
-            rb.AddForce(rayDirection * springForce);
+
+
+            if (!isJumping)
+            {
+                rb.AddForce(rayDirection * springForce);
+            }
+
        
         }
         GetInput();
+        DoMovement();
     }
 
     public void DoMovement()
     {
+        moveDirection = (orientation.forward * verticalInput) * airDampFactor + (orientation.right * horizontalInput) * airDampFactor;
+        rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
 
+
+        if (isGrounded && ((horizontalInput == 0) && (verticalInput == 0)))
+        {
+            rb.drag = dragSpeed;
+            airDampFactor = 1f;
+
+        }
+        else
+        {
+            rb.drag = 0f;
+            airDampFactor = 2f;
+        }
     }
 
     public void GetInput()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+
+        if ((horizontalInput != 0) || (verticalInput != 0) && !isJumping)
+        {
+            anim.SetBool("IsRunning", true);
+        }
+        else
+        {
+            anim.SetBool("IsRunning", false);
+        }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            horizontalCamInput = -1 * Time.deltaTime;
+            horizontalCamInput = -1;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            horizontalCamInput = 1 * Time.deltaTime;
+            horizontalCamInput = 1;
         }
         else
         {
@@ -105,11 +145,50 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+
+        if (Input.GetKey(KeyCode.Space) && canJump)
         {
-            rb.AddForce(0, jumpForce, 0, ForceMode.Impulse);
+            isJumping = true;
+            canJump = false;
+            
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isJumping = false;
+            jumpTimer = 0;
+
+
+        }
+
+        if (isJumping)
+        {
+            rb.AddForce(0, jumpForce, 0, ForceMode.Force);
+            jumpTimer += Time.deltaTime;
+
+            if (jumpTimer >= jumpTimeOut)
+            {
+                isJumping = false;
+                jumpTimer = 0;
+            }
+            
+        }
+
+        if (!isJumping && !canJump)
+        {
+            postJumpTimer += Time.deltaTime;
+
+            if (postJumpTimer >= postJumpTimeOut)
+            {
+                canJump = true;
+                postJumpTimer = 0;
+            }
         }
 
         orientation.transform.Rotate(0, horizontalCamInput * camTurnSpeed, 0, 0);
+        modelOrientation.transform.Rotate(0, horizontalCamInput * camTurnSpeed, 0, 0);
+        cameraGrab.transform.Rotate(0, horizontalCamInput * camTurnSpeed, 0);
+
+
     }
 }
