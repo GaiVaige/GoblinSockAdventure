@@ -20,28 +20,24 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     public float jumpForce;
     float airDampFactor;
     public Transform orientation;
-    public Transform modelOrientation;
-    public Animator anim;
     Vector3 moveDirection;
+    Vector3 strafeDirection;
     public float jumpTimeOut;
     public float jumpTimer;
     public bool canJump;
     public float postJumpTimeOut; // checks if player can jump after already jumping
     public float postJumpTimer;
     public bool isJumping;
-
-    [Header("Camera")]
-    public GameObject cameraGrab;
-    public float horizontalCamInput;
-    public float verticalCamInput;
     public float camTurnSpeed;
-
+    public float strafeForce;
+    public int strafeMultiplier;
+    public Vector3 speed;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         canJump = true;
-        anim = GetComponent<Animator>();
+        speed = rb.velocity;
     }
 
     // Update is called once per frame
@@ -95,26 +91,46 @@ public class Player_Movement_SCript_2 : MonoBehaviour
        
         }
         GetInput();
+
+    }
+
+    private void FixedUpdate()
+    {
         DoMovement();
     }
 
     public void DoMovement()
     {
-        moveDirection = (orientation.forward * verticalInput) * airDampFactor + (orientation.right * horizontalInput) * airDampFactor;
+        moveDirection = (orientation.forward * verticalInput) * airDampFactor;
         rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
 
 
-        if (isGrounded && ((horizontalInput == 0) && (verticalInput == 0)))
+        if ((horizontalInput != 0) && (verticalInput != 0) && verticalInput != 0)
         {
             rb.drag = dragSpeed;
             airDampFactor = 1f;
 
         }
-        else
+        else if (verticalInput == 0 && horizontalInput == 0)
         {
-            rb.drag = 0f;
-            airDampFactor = 2f;
+            rb.drag = dragSpeed * 1.2f;
         }
+
+        transform.Rotate(0, horizontalInput * camTurnSpeed, 0);
+
+        strafeDirection = (orientation.right * strafeForce * strafeMultiplier) * airDampFactor;
+        rb.AddForce(strafeDirection, ForceMode.Force);
+
+        if(Input.GetKey(KeyCode.E) && Input.GetKey(KeyCode.A))
+        {
+            rb.drag = 1;
+        }
+
+        if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.Q))
+        {
+            rb.drag = 1;
+        }
+
     }
 
     public void GetInput()
@@ -122,72 +138,19 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if ((horizontalInput != 0) || (verticalInput != 0) && !isJumping)
+        if(Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
         {
-            anim.SetBool("IsRunning", true);
+            strafeMultiplier = -1;
         }
-        else
+        else if(!Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
         {
-            anim.SetBool("IsRunning", false);
-        }
-
-        if (Input.GetKey(KeyCode.LeftArrow))
+            strafeMultiplier = 1;
+        }    
+        else if(Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
         {
-            horizontalCamInput = -1;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            horizontalCamInput = 1;
-        }
-        else
-        {
-            horizontalCamInput = 0;
+            strafeMultiplier = 0;
         }
 
-
-
-        if (Input.GetKey(KeyCode.Space) && canJump)
-        {
-            isJumping = true;
-            canJump = false;
-            
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            isJumping = false;
-            jumpTimer = 0;
-
-
-        }
-
-        if (isJumping)
-        {
-            rb.AddForce(0, jumpForce, 0, ForceMode.Force);
-            jumpTimer += Time.deltaTime;
-
-            if (jumpTimer >= jumpTimeOut)
-            {
-                isJumping = false;
-                jumpTimer = 0;
-            }
-            
-        }
-
-        if (!isJumping && !canJump)
-        {
-            postJumpTimer += Time.deltaTime;
-
-            if (postJumpTimer >= postJumpTimeOut)
-            {
-                canJump = true;
-                postJumpTimer = 0;
-            }
-        }
-
-        orientation.transform.Rotate(0, horizontalCamInput * camTurnSpeed, 0, 0);
-        modelOrientation.transform.Rotate(0, horizontalCamInput * camTurnSpeed, 0, 0);
-        cameraGrab.transform.Rotate(0, horizontalCamInput * camTurnSpeed, 0);
 
 
     }
