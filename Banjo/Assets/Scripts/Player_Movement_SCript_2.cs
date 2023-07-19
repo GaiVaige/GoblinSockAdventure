@@ -38,6 +38,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         canJump = true;
         speed = rb.velocity;
+        speed.x = moveDirection.x;
     }
 
     // Update is called once per frame
@@ -104,16 +105,14 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         moveDirection = (orientation.forward * verticalInput) * airDampFactor;
         rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
 
-
-        if ((horizontalInput != 0) && (verticalInput != 0) && verticalInput != 0)
+        if(verticalInput == 0 && horizontalInput == 0)
+        {
+            rb.drag = dragSpeed * 1.2f;
+        }
+        else
         {
             rb.drag = dragSpeed;
             airDampFactor = 1f;
-
-        }
-        else if (verticalInput == 0 && horizontalInput == 0)
-        {
-            rb.drag = dragSpeed * 1.2f;
         }
 
         transform.Rotate(0, horizontalInput * camTurnSpeed, 0);
@@ -147,6 +146,10 @@ public class Player_Movement_SCript_2 : MonoBehaviour
             strafeMultiplier = 1;
         }    
         else if(Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+        {
+            strafeMultiplier = 0;
+        }
+        else if(!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
         {
             strafeMultiplier = 0;
         }
