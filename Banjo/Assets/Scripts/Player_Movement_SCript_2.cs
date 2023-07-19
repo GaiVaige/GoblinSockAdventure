@@ -80,7 +80,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
             float x = rayHit.distance - playerRideHeight;
         
             float springForce = (x * springStrength) - (relVel * springDamper);
-            Debug.Log(springForce);
+            //Debug.Log(springForce);
 
 
             if (!isJumping)
