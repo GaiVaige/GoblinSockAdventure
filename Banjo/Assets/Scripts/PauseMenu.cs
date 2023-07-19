@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
+        //Returns to pause menu if escape is clicked in audio options menu
         if (Input.GetKeyDown(KeyCode.Escape) && audioMenuState == true)
         {
             OpenPauseMenu();
@@ -51,6 +52,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    //Options button
     public void AudioOptions()
     {
         pauseMenu.SetActive(false);
@@ -58,6 +60,7 @@ public class PauseMenu : MonoBehaviour
         audioMenuState = true;
     }
     
+    //Opens pause menu
     private void OpenPauseMenu()
     {
         Time.timeScale = 0;
