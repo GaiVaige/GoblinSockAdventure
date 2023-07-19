@@ -5,18 +5,22 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using System;
 
 public class HUD : MonoBehaviour
 {
 
     [SerializeField] private TMP_Text timer;
+    [SerializeField] private TMP_Text vehicleSpeedText;
 
     private float timeElapsed;
     private double secondsElapsedRounded;
     private int minutesElapsed;
+    private float vehicleSpeed;
 
     [SerializeField] private int boostChagesRemaining;
     [SerializeField] private GameObject[] boostDisplay;
+    [SerializeField] private Rigidbody vehicle;
 
     //Updates timer to show time elapsed
     void Update()
@@ -35,6 +39,9 @@ public class HUD : MonoBehaviour
         {
             BoostCharges();
         }
+
+        vehicleSpeed = vehicle.velocity.magnitude;
+        vehicleSpeedText.text = "Speed: " + Math.Round(vehicleSpeed) + "km/h";
     }
 
     //Displays Boosts left available
