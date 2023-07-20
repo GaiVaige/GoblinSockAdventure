@@ -38,6 +38,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         canJump = true;
         speed = rb.velocity;
+        speed.x = moveDirection.x;
     }
 
     // Update is called once per frame
@@ -45,12 +46,12 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     {
 
         RaycastHit rayHit;
-        if(Physics.Raycast(transform.position, Vector3.down, out rayHit))
+        if (Physics.Raycast(transform.position, Vector3.down, out rayHit))
         {
             rayDidHit = true;
         }
 
-        if(Physics.Raycast(transform.position, Vector3.down, playerSittingHeight * .5f + groundCheckDistance))
+        if (Physics.Raycast(transform.position, Vector3.down, playerSittingHeight * .5f + groundCheckDistance))
         {
             isGrounded = true;
         }
@@ -64,23 +65,23 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         {
             Vector3 vel = rb.velocity;
             Vector3 rayDirection = transform.TransformDirection(Vector3.down);
-        
+
             Vector3 otherVelocity = Vector3.zero;
             Rigidbody hitBody = rayHit.rigidbody;
-            if(hitBody != null)
+            if (hitBody != null)
             {
                 otherVelocity = hitBody.velocity;
             }
-        
+
             float rayDirVel = Vector3.Dot(rayDirection, vel);
             float otherDirVel = Vector3.Dot(rayDirection, otherVelocity);
 
             float relVel = rayDirVel - otherDirVel;
 
             float x = rayHit.distance - playerRideHeight;
-        
+
             float springForce = (x * springStrength) - (relVel * springDamper);
-            //Debug.Log(springForce);
+            Debug.Log(springForce);
 
 
             if (!isJumping)
@@ -88,7 +89,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
                 rb.AddForce(rayDirection * springForce);
             }
 
-       
+
         }
         GetInput();
 
@@ -104,16 +105,14 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         moveDirection = (orientation.forward * verticalInput) * airDampFactor;
         rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
 
-
-        if ((horizontalInput != 0) && (verticalInput != 0) && verticalInput != 0)
+        if (verticalInput == 0 && horizontalInput == 0)
+        {
+            rb.drag = dragSpeed * 1.2f;
+        }
+        else
         {
             rb.drag = dragSpeed;
             airDampFactor = 1f;
-
-        }
-        else if (verticalInput == 0 && horizontalInput == 0)
-        {
-            rb.drag = dragSpeed * 1.2f;
         }
 
         transform.Rotate(0, horizontalInput * camTurnSpeed, 0);
@@ -121,7 +120,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         strafeDirection = (orientation.right * strafeForce * strafeMultiplier) * airDampFactor;
         rb.AddForce(strafeDirection, ForceMode.Force);
 
-        if(Input.GetKey(KeyCode.E) && Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.E) && Input.GetKey(KeyCode.A))
         {
             rb.drag = 1;
         }
@@ -138,15 +137,19 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if(Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
         {
             strafeMultiplier = -1;
         }
-        else if(!Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+        else if (!Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
         {
             strafeMultiplier = 1;
-        }    
-        else if(Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+        }
+        else if (Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+        {
+            strafeMultiplier = 0;
+        }
+        else if (!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
         {
             strafeMultiplier = 0;
         }

@@ -40,6 +40,7 @@ public class HUD : MonoBehaviour
             BoostCharges();
         }
 
+        //Displays current vehicle speed
         vehicleSpeed = vehicle.velocity.magnitude;
         vehicleSpeedText.text = "Speed: " + Math.Round(vehicleSpeed) + "km/h";
     }
