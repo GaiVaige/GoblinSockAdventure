@@ -153,6 +153,10 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         {
             strafeMultiplier = 0;
         }
+        else if(!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
+        {
+            strafeMultiplier = 0;
+        }
 
 
 
