@@ -621,13 +621,8 @@ MonoBehaviour:
   springStrength: 1.59
   springDamper: 1.53
   rayDidHit: 0
-<<<<<<< HEAD:Banjo/Assets/Scenes/TestingTrack.unity
   moveSpeed: 105
   dragSpeed: 1.1
-=======
-  moveSpeed: 65
-  dragSpeed: 1.5
->>>>>>> Kian-Branch:Banjo/Assets/Scenes/Level1.unity
   horizontalInput: 0
   verticalInput: 0
   jumpForce: 0
