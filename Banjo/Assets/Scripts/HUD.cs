@@ -21,6 +21,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private int boostChagesRemaining;
     [SerializeField] private GameObject[] boostDisplay;
     [SerializeField] private Rigidbody vehicle;
+    public float speedoMultiplier;
 
     //Updates timer to show time elapsed
     void Update()
@@ -42,7 +43,7 @@ public class HUD : MonoBehaviour
 
         //Displays current vehicle speed
         vehicleSpeed = vehicle.velocity.magnitude;
-        vehicleSpeedText.text = "Speed: " + Math.Round(vehicleSpeed) + "km/h";
+        vehicleSpeedText.text = "Speed: " + Math.Round(vehicleSpeed * speedoMultiplier) + "km/h";
     }
 
     //Displays Boosts left available

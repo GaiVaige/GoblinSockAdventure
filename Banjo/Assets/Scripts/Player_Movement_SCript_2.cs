@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public class Player_Movement_SCript_2 : MonoBehaviour
@@ -22,8 +23,8 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     public Transform orientation;
     Vector3 moveDirection;
     Vector3 strafeDirection;
-    public float jumpTimeOut;
-    public float jumpTimer;
+    public int jumpTimeOut;
+    public float turnTimer;
     public bool canJump;
     public float postJumpTimeOut; // checks if player can jump after already jumping
     public float postJumpTimer;
@@ -32,6 +33,12 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     public float strafeForce;
     public int strafeMultiplier;
     public Vector3 speed;
+
+    public Camera playerCamFOV;
+    public float viewClamper;
+    public float camTurnLimiter;
+
+    public GameObject modelObject;
 
     void Start()
     {
@@ -44,6 +51,10 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
+        playerCamFOV.fieldOfView = 80 * (1 + rb.velocity.magnitude/viewClamper);
+
 
         RaycastHit rayHit;
         if (Physics.Raycast(transform.position, Vector3.down, out rayHit))
@@ -81,7 +92,6 @@ public class Player_Movement_SCript_2 : MonoBehaviour
             float x = rayHit.distance - playerRideHeight;
 
             float springForce = (x * springStrength) - (relVel * springDamper);
-            Debug.Log(springForce);
 
 
             if (!isJumping)
@@ -92,6 +102,27 @@ public class Player_Movement_SCript_2 : MonoBehaviour
 
         }
         GetInput();
+
+
+
+        if (Input.GetKey(KeyCode.A) && ((modelObject.transform.eulerAngles.z <= 52f || modelObject.transform.eulerAngles.z >= 307f)))
+        {
+            modelObject.transform.Rotate(0, 0, 1);
+
+        }
+
+        Debug.Log(modelObject.transform.eulerAngles.z);
+
+        if (Input.GetKey(KeyCode.D) && ((modelObject.transform.eulerAngles.z <= 53f || modelObject.transform.eulerAngles.z >= 308f)))
+        {
+            modelObject.transform.Rotate(0, 0, -1);
+
+        }
+
+        if (!(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)))
+        {
+            modelObject.transform.Rotate(0, 0, -modelObject.transform.rotation.z);
+        }
 
     }
 
@@ -116,6 +147,9 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         }
 
         transform.Rotate(0, horizontalInput * camTurnSpeed, 0);
+
+
+
 
         strafeDirection = (orientation.right * strafeForce * strafeMultiplier) * airDampFactor;
         rb.AddForce(strafeDirection, ForceMode.Force);

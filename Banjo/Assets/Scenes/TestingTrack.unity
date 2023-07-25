@@ -547,7 +547,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 166172917}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &166172916
 GameObject:
@@ -575,14 +575,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166172916}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 29.7, y: 14.5, z: 326.2}
-  m_LocalScale: {x: 4.732814, y: 0.40886, z: 4.3039}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 29.7, y: 14.5, z: 275.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1568897671}
   - {fileID: 371341811}
   - {fileID: 157452961}
-  - {fileID: 1568897671}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -615,28 +615,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGrounded: 0
-  playerSittingHeight: 2.24
+  playerSittingHeight: 2.54
   groundCheckDistance: 1.02
-  playerRideHeight: 1.52
+  playerRideHeight: 7
   springStrength: 1.59
   springDamper: 1.53
   rayDidHit: 0
-  moveSpeed: 65
-  dragSpeed: 0.6
+  moveSpeed: 105
+  dragSpeed: 1.1
   horizontalInput: 0
   verticalInput: 0
   jumpForce: 0
   orientation: {fileID: 157452961}
   jumpTimeOut: 0
-  jumpTimer: 0
+  turnTimer: 1
   canJump: 0
   postJumpTimeOut: 0
   postJumpTimer: 0
   isJumping: 0
-  camTurnSpeed: 0.7
-  strafeForce: 25
+  camTurnSpeed: 2.2
+  strafeForce: 53
   strafeMultiplier: 0
   speed: {x: 0, y: 0, z: 0}
+  playerCamFOV: {fileID: 1807121488}
+  viewClamper: 200
+  camTurnLimiter: 52
+  modelObject: {fileID: 1568897670}
 --- !u!135 &166172924
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1079,13 +1083,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371341810}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 1.58, z: -14.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1807121489}
   m_Father: {fileID: 166172917}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &552408218
 GameObject:
@@ -2826,6 +2830,7 @@ MonoBehaviour:
   - {fileID: 1178097946}
   - {fileID: 36546355}
   vehicle: {fileID: 166172922}
+  speedoMultiplier: 4.3
 --- !u!1 &1365948422
 GameObject:
   m_ObjectHideFlags: 0
@@ -3627,12 +3632,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568897670}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.11861, z: 0.07101}
-  m_LocalScale: {x: 30.147015, y: 238.82922, z: 192.0077}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 1.51, z: 1.02}
+  m_LocalScale: {x: 307.8, y: 307.8, z: 1112.0049}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 166172917}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1568897672
 MeshRenderer:
