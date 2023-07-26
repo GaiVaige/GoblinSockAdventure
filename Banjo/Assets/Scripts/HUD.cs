@@ -13,26 +13,41 @@ public class HUD : MonoBehaviour
     [SerializeField] private TMP_Text timer;
     [SerializeField] private TMP_Text vehicleSpeedText;
 
+    private float maxSpeedAngle = -120;
+    private float minSpeedAngle = 120;
+
     private float timeElapsed;
     private double secondsElapsedRounded;
     private int minutesElapsed;
     private float vehicleSpeed;
 
+    private float speedMax = 200;
+
     [SerializeField] private int boostChagesRemaining;
     [SerializeField] private GameObject[] boostDisplay;
     [SerializeField] private Rigidbody vehicle;
+    [SerializeField] private Transform speedNeedleTransform;
 
     //Updates timer to show time elapsed
     void Update()
     {
         timeElapsed += Time.deltaTime;
-        secondsElapsedRounded = System.Math.Round(timeElapsed, 2);
+        secondsElapsedRounded = System.Math.Round(timeElapsed, 3);
         if (secondsElapsedRounded >= 60)
         {
             timeElapsed = 0;
             minutesElapsed++;
         }
-        timer.text = "Time: " + minutesElapsed + (".") + secondsElapsedRounded;
+        
+        if (secondsElapsedRounded >= 10)
+        {
+            timer.text = "Time: " + minutesElapsed + (":") + secondsElapsedRounded;
+        }
+        else
+        {
+            timer.text = "Time: " + minutesElapsed + (":0") + secondsElapsedRounded;
+        }
+        
 
         //Test input to check boost charges works
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -40,9 +55,10 @@ public class HUD : MonoBehaviour
             BoostCharges();
         }
 
-        //Displays current vehicle speed
+        speedNeedleTransform.eulerAngles = new Vector3(0, 0, GetSpeedRotation());
+
+        //Gets vehicle speed
         vehicleSpeed = vehicle.velocity.magnitude;
-        vehicleSpeedText.text = "Speed: " + Math.Round(vehicleSpeed) + "km/h";
     }
 
     //Displays Boosts left available
@@ -50,6 +66,15 @@ public class HUD : MonoBehaviour
     {
         boostDisplay[boostChagesRemaining-1].SetActive(false);
         boostChagesRemaining--;
+    }
+
+    private float GetSpeedRotation()
+    {
+        float totalAngleSize = minSpeedAngle - maxSpeedAngle;
+
+        float speedNormalized = (vehicleSpeed / speedMax) * 3;
+
+        return minSpeedAngle - speedNormalized * totalAngleSize;
     }
 
 }
