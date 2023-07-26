@@ -90,7 +90,7 @@ public class HUD : MonoBehaviour
     {
         float totalAngleSize = minSpeedAngle - maxSpeedAngle;
 
-        float speedNormalized = (vehicleSpeed / speedMax) * 3;
+        float speedNormalized = (vehicleSpeed / speedMax);
 
         return minSpeedAngle - speedNormalized * totalAngleSize;
     }
