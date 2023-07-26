@@ -623,6 +623,9 @@ MonoBehaviour:
   rayDidHit: 0
   moveSpeed: 105
   dragSpeed: 1.1
+  boost: {fileID: 1338840355}
+  boostSpeed: 10
+  isBoosting: 0
   horizontalInput: 0
   verticalInput: 0
   jumpForce: 0
@@ -639,7 +642,7 @@ MonoBehaviour:
   speed: {x: 0, y: 0, z: 0}
   playerCamFOV: {fileID: 1807121488}
   viewClamper: 200
-  camTurnLimiter: 52
+  camTurnLimiter: 5
   modelObject: {fileID: 1568897670}
 --- !u!135 &166172924
 SphereCollider:
@@ -2983,6 +2986,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: {fileID: 1379781450}
   vehicleSpeedText: {fileID: 1784059684}
+  boostTimer: 0
+  rechargeTime: 2
+  maxBoosts: 3
+  canBoost: 0
   boostChagesRemaining: 3
   boostDisplay:
   - {fileID: 556310149}

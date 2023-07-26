@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UIElements;
+using UnityEditor;
 using UnityEngine;
 
 public class Player_Movement_SCript_2 : MonoBehaviour
@@ -16,6 +16,9 @@ public class Player_Movement_SCript_2 : MonoBehaviour
 
     public float moveSpeed;
     public float dragSpeed;
+    public HUD boost;
+    public float boostSpeed;
+    public bool isBoosting;
     public float horizontalInput;
     public float verticalInput;
     public float jumpForce;
@@ -103,25 +106,41 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         }
         GetInput();
 
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            boost.canBoost = true;
+            isBoosting = true;
+        }
+
+        DoBoost();
 
 
+        
+        
         if (Input.GetKey(KeyCode.A) && ((modelObject.transform.eulerAngles.z <= 52f || modelObject.transform.eulerAngles.z >= 307f)))
         {
-            modelObject.transform.Rotate(0, 0, 1);
+                modelObject.transform.Rotate(0, 0, 1 * 1 / camTurnLimiter);
 
         }
+
+
 
         Debug.Log(modelObject.transform.eulerAngles.z);
 
-        if (Input.GetKey(KeyCode.D) && ((modelObject.transform.eulerAngles.z <= 53f || modelObject.transform.eulerAngles.z >= 308f)))
+        if (Input.GetKey(KeyCode.D) && ((modelObject.transform.eulerAngles.z <= 52f || modelObject.transform.eulerAngles.z >= 307f)))
         {
-            modelObject.transform.Rotate(0, 0, -1);
+            modelObject.transform.Rotate(0, 0, -1 * 1 / camTurnLimiter);
 
         }
 
-        if (!(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)))
+        if (!(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) && modelObject.transform.eulerAngles.z != 0f)
         {
             modelObject.transform.Rotate(0, 0, -modelObject.transform.rotation.z);
+        }
+
+        if (!(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) && modelObject.transform.eulerAngles.z == 0f)
+        {
+            modelObject.transform.eulerAngles.Set(0, 0, 0);
         }
 
     }
@@ -192,6 +211,26 @@ public class Player_Movement_SCript_2 : MonoBehaviour
             strafeMultiplier = 0;
         }
 
+
+
+    }
+
+    void DoBoost()
+    {
+        if (isBoosting)
+        {
+            if (boost.boostChagesRemaining > 0)
+            {
+                    rb.AddForce(moveDirection * boostSpeed, ForceMode.Force);
+
+            }
+
+        }
+
+        if(boost.canBoost == false)
+        {
+            isBoosting = false;
+        }
 
 
     }

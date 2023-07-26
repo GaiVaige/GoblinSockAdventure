@@ -18,14 +18,33 @@ public class HUD : MonoBehaviour
     private int minutesElapsed;
     private float vehicleSpeed;
 
-    [SerializeField] private int boostChagesRemaining;
+    public float boostTimer;
+    public int rechargeTime;
+    public int maxBoosts;
+    public bool canBoost;
+
+    [SerializeField] public int boostChagesRemaining;
     [SerializeField] private GameObject[] boostDisplay;
     [SerializeField] private Rigidbody vehicle;
     public float speedoMultiplier;
 
+    public void Start()
+    {
+        maxBoosts = 3;
+    }
+
     //Updates timer to show time elapsed
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && boostChagesRemaining > 0)
+        {
+            canBoost = true;
+            BoostCharges();
+
+        }
+
+
         timeElapsed += Time.deltaTime;
         secondsElapsedRounded = System.Math.Round(timeElapsed, 2);
         if (secondsElapsedRounded >= 60)
@@ -36,10 +55,10 @@ public class HUD : MonoBehaviour
         timer.text = "Time: " + minutesElapsed + (".") + secondsElapsedRounded;
 
         //Test input to check boost charges works
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            BoostCharges();
-        }
+
+
+        BoostRecharge();
+        DisplayRefresh();
 
         //Displays current vehicle speed
         vehicleSpeed = vehicle.velocity.magnitude;
@@ -51,6 +70,38 @@ public class HUD : MonoBehaviour
     {
         boostDisplay[boostChagesRemaining-1].SetActive(false);
         boostChagesRemaining--;
+    }
+
+
+    public void BoostRecharge()
+    {
+
+        if (canBoost)
+        {
+            boostTimer += Time.deltaTime;
+
+
+        }
+
+        if (boostTimer >= rechargeTime)
+        {
+            boostChagesRemaining++;
+            canBoost = false;
+            boostTimer = 0f;
+        }
+
+        if(!canBoost && boostChagesRemaining < maxBoosts)
+        {
+            canBoost = true;
+        }
+    }
+
+    public void DisplayRefresh()
+    {
+        if (boostChagesRemaining <= maxBoosts)
+        {
+            boostDisplay[boostChagesRemaining - 1].SetActive(true);
+        }
     }
 
 }
