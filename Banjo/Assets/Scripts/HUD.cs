@@ -24,6 +24,7 @@ public class HUD : MonoBehaviour
     public float boostTimer;
     public int rechargeTime;
     public int maxBoosts;
+    public Transform speedNeedleTransform;
     public bool canBoost;
 
     [SerializeField] public int boostChagesRemaining;
@@ -92,6 +93,8 @@ public class HUD : MonoBehaviour
         float speedNormalized = (vehicleSpeed / speedMax) * 3;
 
         return minSpeedAngle - speedNormalized * totalAngleSize;
+    }
+
 
     public void BoostRecharge()
     {
