@@ -469,7 +469,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 166172917}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &166172916
 GameObject:
@@ -502,9 +502,9 @@ Transform:
   m_LocalScale: {x: 4.732814, y: 0.40886, z: 4.3039}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1568897671}
   - {fileID: 371341811}
   - {fileID: 157452961}
-  - {fileID: 1568897671}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -537,28 +537,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGrounded: 0
-  playerSittingHeight: 2.24
+  playerSittingHeight: 2.54
   groundCheckDistance: 1.02
-  playerRideHeight: 1.52
+  playerRideHeight: 7
   springStrength: 1.59
   springDamper: 1.53
   rayDidHit: 0
-  moveSpeed: 65
-  dragSpeed: 1.5
+  moveSpeed: 105
+  dragSpeed: 1.1
+  boost: {fileID: 1338840355}
+  boostSpeed: 10
+  isBoosting: 0
   horizontalInput: 0
   verticalInput: 0
   jumpForce: 0
   orientation: {fileID: 157452961}
   jumpTimeOut: 0
-  jumpTimer: 0
+  turnTimer: 1
   canJump: 0
   postJumpTimeOut: 0
   postJumpTimer: 0
   isJumping: 0
-  camTurnSpeed: 0.7
-  strafeForce: 25
+  camTurnSpeed: 2.2
+  strafeForce: 53
   strafeMultiplier: 0
   speed: {x: 0, y: 0, z: 0}
+  playerCamFOV: {fileID: 1807121488}
+  viewClamper: 200
+  camTurnLimiter: 5
+  modelObject: {fileID: 1568897670}
 --- !u!135 &166172924
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1024,13 +1031,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371341810}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 1.58, z: -14.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1807121489}
   m_Father: {fileID: 166172917}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &416484121
 GameObject:
@@ -3336,6 +3343,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: {fileID: 1379781450}
   vehicleSpeedText: {fileID: 0}
+  boostTimer: 0
+  rechargeTime: 2
+  maxBoosts: 3
+  canBoost: 0
   boostChagesRemaining: 3
   boostDisplay:
   - {fileID: 875667842}
@@ -4297,7 +4308,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 166172917}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1568897672
 MeshRenderer:

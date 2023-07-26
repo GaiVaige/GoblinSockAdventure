@@ -20,17 +20,34 @@ public class HUD : MonoBehaviour
     private double secondsElapsedRounded;
     private int minutesElapsed;
     private float vehicleSpeed;
-
     private float speedMax = 200;
+    public float boostTimer;
+    public int rechargeTime;
+    public int maxBoosts;
+    public bool canBoost;
 
-    [SerializeField] private int boostChagesRemaining;
+    [SerializeField] public int boostChagesRemaining;
     [SerializeField] private GameObject[] boostDisplay;
     [SerializeField] private Rigidbody vehicle;
-    [SerializeField] private Transform speedNeedleTransform;
+    public float speedoMultiplier;
+
+    public void Start()
+    {
+        maxBoosts = 3;
+    }
 
     //Updates timer to show time elapsed
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && boostChagesRemaining > 0)
+        {
+            canBoost = true;
+            BoostCharges();
+
+        }
+
+
         timeElapsed += Time.deltaTime;
         secondsElapsedRounded = System.Math.Round(timeElapsed, 3);
         if (secondsElapsedRounded >= 60)
@@ -50,10 +67,10 @@ public class HUD : MonoBehaviour
         
 
         //Test input to check boost charges works
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            BoostCharges();
-        }
+
+
+        BoostRecharge();
+        DisplayRefresh();
 
         speedNeedleTransform.eulerAngles = new Vector3(0, 0, GetSpeedRotation());
 
@@ -75,6 +92,36 @@ public class HUD : MonoBehaviour
         float speedNormalized = (vehicleSpeed / speedMax) * 3;
 
         return minSpeedAngle - speedNormalized * totalAngleSize;
+
+    public void BoostRecharge()
+    {
+
+        if (canBoost)
+        {
+            boostTimer += Time.deltaTime;
+
+
+        }
+
+        if (boostTimer >= rechargeTime)
+        {
+            boostChagesRemaining++;
+            canBoost = false;
+            boostTimer = 0f;
+        }
+
+        if(!canBoost && boostChagesRemaining < maxBoosts)
+        {
+            canBoost = true;
+        }
+    }
+
+    public void DisplayRefresh()
+    {
+        if (boostChagesRemaining <= maxBoosts)
+        {
+            boostDisplay[boostChagesRemaining - 1].SetActive(true);
+        }
     }
 
 }
