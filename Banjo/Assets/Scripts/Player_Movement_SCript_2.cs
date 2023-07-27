@@ -17,6 +17,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     public float moveSpeed;
     public float dragSpeed;
     public HUD boost;
+    public bool isInGameplay;
     public float boostSpeed;
     public bool isBoosting;
     public float horizontalInput;
@@ -106,36 +107,37 @@ public class Player_Movement_SCript_2 : MonoBehaviour
         }
         GetInput();
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (isInGameplay)
         {
-            boost.canBoost = true;
-            isBoosting = true;
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                boost.canBoost = true;
+                isBoosting = true;
+            }
         }
 
-        DoBoost();
+
 
 
         
         
         if (Input.GetKey(KeyCode.A) && ((modelObject.transform.eulerAngles.z <= 52f || modelObject.transform.eulerAngles.z >= 307f)))
         {
-                modelObject.transform.Rotate(0, 0, 1 * 1 / camTurnLimiter);
+                modelObject.transform.Rotate(0, 0, 1 * camTurnLimiter * Time.deltaTime);
 
         }
 
 
 
-        Debug.Log(modelObject.transform.eulerAngles.z);
-
         if (Input.GetKey(KeyCode.D) && ((modelObject.transform.eulerAngles.z <= 52f || modelObject.transform.eulerAngles.z >= 307f)))
         {
-            modelObject.transform.Rotate(0, 0, -1 * 1 / camTurnLimiter);
+            modelObject.transform.Rotate(0, 0, -1 * camTurnLimiter * Time.deltaTime);
 
         }
 
         if (!(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) && modelObject.transform.eulerAngles.z != 0f)
         {
-            modelObject.transform.Rotate(0, 0, -modelObject.transform.rotation.z);
+            modelObject.transform.Rotate(0, 0, -modelObject.transform.rotation.z * camTurnLimiter * 2 * Time.deltaTime);
         }
 
         if (!(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) && modelObject.transform.eulerAngles.z == 0f)
@@ -148,6 +150,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     private void FixedUpdate()
     {
         DoMovement();
+        DoBoost();
     }
 
     public void DoMovement()
@@ -219,7 +222,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     {
         if (isBoosting)
         {
-            if (boost.boostChagesRemaining > 0)
+            if (boost.boostChagesRemaining >= 0)
             {
                     rb.AddForce(moveDirection * boostSpeed, ForceMode.Force);
 

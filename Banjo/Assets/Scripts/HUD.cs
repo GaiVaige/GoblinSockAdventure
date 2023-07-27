@@ -16,9 +16,11 @@ public class HUD : MonoBehaviour
     private float maxSpeedAngle = -120;
     private float minSpeedAngle = 120;
 
+
+    public bool isInGameplay;
     private float timeElapsed;
-    private double secondsElapsedRounded;
-    private int minutesElapsed;
+    public double secondsElapsedRounded;
+    public int minutesElapsed;
     private float vehicleSpeed;
     private float speedMax = 200;
     public float boostTimer;
@@ -40,31 +42,37 @@ public class HUD : MonoBehaviour
     //Updates timer to show time elapsed
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && boostChagesRemaining > 0)
+        if (isInGameplay)
         {
-            canBoost = true;
-            BoostCharges();
+            if (Input.GetKeyDown(KeyCode.LeftShift) && boostChagesRemaining > 0)
+            {
+                canBoost = true;
+                BoostCharges();
 
+            }
+
+            timeElapsed += Time.deltaTime;
+            secondsElapsedRounded = System.Math.Round(timeElapsed, 3);
+            if (secondsElapsedRounded >= 60)
+            {
+                timeElapsed = 0;
+                minutesElapsed++;
+            }
+
+            if (secondsElapsedRounded >= 10)
+            {
+                timer.text = "Time: " + minutesElapsed + (":") + secondsElapsedRounded;
+            }
+            else
+            {
+                timer.text = "Time: " + minutesElapsed + (":0") + secondsElapsedRounded;
+            }
         }
 
+       
 
-        timeElapsed += Time.deltaTime;
-        secondsElapsedRounded = System.Math.Round(timeElapsed, 3);
-        if (secondsElapsedRounded >= 60)
-        {
-            timeElapsed = 0;
-            minutesElapsed++;
-        }
+
         
-        if (secondsElapsedRounded >= 10)
-        {
-            timer.text = "Time: " + minutesElapsed + (":") + secondsElapsedRounded;
-        }
-        else
-        {
-            timer.text = "Time: " + minutesElapsed + (":0") + secondsElapsedRounded;
-        }
         
 
         //Test input to check boost charges works

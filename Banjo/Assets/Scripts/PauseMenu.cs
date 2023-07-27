@@ -58,7 +58,7 @@ public class PauseMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(0.6f);
 
-        SceneManager.LoadScene("TestingTrack");
+        SceneManager.LoadScene("Level1");
     }
 
     //Options button
