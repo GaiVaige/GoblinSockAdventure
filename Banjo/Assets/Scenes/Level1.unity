@@ -625,9 +625,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 750, y: 750}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.46}
 --- !u!114 &258138950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1797,9 +1797,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 262.49997, y: -15}
   m_SizeDelta: {x: 750, y: 750}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.85, y: 0.48}
 --- !u!114 &695326691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3735,11 +3735,11 @@ MonoBehaviour:
   secondsElapsedRounded: 0
   minutesElapsed: 0
   boostTimer: 0
-  rechargeTime: 2
+  rechargeTime: 4
   maxBoosts: 3
   speedNeedleTransform: {fileID: 829296613}
   canBoost: 0
-  boostChagesRemaining: 3
+  boostChargesRemaining: 0
   boostDisplay:
   - {fileID: 1576116869}
   - {fileID: 258138948}
@@ -4809,9 +4809,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -225, y: -30}
   m_SizeDelta: {x: 750, y: 750}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.2, y: 0.46}
 --- !u!114 &1576116871
 MonoBehaviour:
   m_ObjectHideFlags: 0

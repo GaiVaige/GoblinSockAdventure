@@ -222,7 +222,7 @@ public class Player_Movement_SCript_2 : MonoBehaviour
     {
         if (isBoosting)
         {
-            if (boost.boostChagesRemaining >= 0)
+            if (boost.boostChargesRemaining >= 0)
             {
                     rb.AddForce(moveDirection * boostSpeed, ForceMode.Force);
 

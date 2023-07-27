@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 using System;
 
 public class HUD : MonoBehaviour
@@ -29,7 +28,17 @@ public class HUD : MonoBehaviour
     public Transform speedNeedleTransform;
     public bool canBoost;
 
-    [SerializeField] public int boostChagesRemaining;
+    private Image boostDisplayImage;
+    private float boostDisplayTimer;
+    private bool isBoosting = false;
+    private bool boostRechargeWhileBoosting = false;
+    private bool currentlyBoosting = false;
+    private bool newBoostChargeAdded = false;
+    private bool newBoostScaleCompleted = false;
+    private Transform newRechargedBoost;
+    private float newRechargedBoostTimer;
+
+    [SerializeField] public int boostChargesRemaining;
     [SerializeField] private GameObject[] boostDisplay;
     [SerializeField] private Rigidbody vehicle;
     public float speedoMultiplier;
@@ -37,6 +46,8 @@ public class HUD : MonoBehaviour
     public void Start()
     {
         maxBoosts = 3;
+        boostChargesRemaining = 2;
+        boostDisplayImage = boostDisplay[boostChargesRemaining - 1].GetComponent<Image>();
     }
 
     //Updates timer to show time elapsed
@@ -44,11 +55,14 @@ public class HUD : MonoBehaviour
     {
         if (isInGameplay)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && boostChagesRemaining > 0)
+            if (currentlyBoosting == false)
             {
-                canBoost = true;
-                BoostCharges();
-
+                if (Input.GetKeyDown(KeyCode.LeftShift) && boostChargesRemaining > 0)
+                {
+                    canBoost = true;
+                    BoostCharges();
+                    boostDisplayTimer = 0;
+                }
             }
 
             timeElapsed += Time.deltaTime;
@@ -69,11 +83,61 @@ public class HUD : MonoBehaviour
             }
         }
 
-       
+
+        boostDisplayTimer += Time.deltaTime;
+
+        if (newBoostChargeAdded == true)
+        {
+            if ((newRechargedBoostTimer <= 0.2f) && (!newBoostScaleCompleted))
+            {
+                newRechargedBoostTimer += Time.deltaTime;
+                
+                if (newRechargedBoostTimer >= 0.2f)
+                {
+                    newBoostScaleCompleted = true;
+                }
+            }
+            
+            else
+            {
+                newRechargedBoostTimer -= Time.deltaTime;
+            }
 
 
-        
-        
+            if (newRechargedBoostTimer < 0)
+            {
+                newRechargedBoostTimer = 0;
+                newBoostScaleCompleted = false;
+                newBoostChargeAdded = false;
+            }
+      
+            newRechargedBoost.transform.localScale = new Vector3(1 + newRechargedBoostTimer, 1 + newRechargedBoostTimer, 1);        
+        }
+
+        if (isBoosting)
+        {
+            if (boostDisplayTimer < 2)
+            {
+                if (boostRechargeWhileBoosting == true)
+                {
+                    boostDisplayImage = boostDisplay[boostChargesRemaining].GetComponent<Image>();
+                    boostDisplay[boostChargesRemaining - 1].SetActive(true);
+                }
+                boostDisplayImage.fillAmount = 1 - (boostDisplayTimer / 2);
+            }
+            if (boostDisplayTimer > 2)
+            {
+                if (boostChargesRemaining > 0)
+                {
+                    boostDisplay[boostChargesRemaining - 1].SetActive(false);
+                    isBoosting = false;
+                    boostRechargeWhileBoosting = false;
+                }
+                currentlyBoosting = false;
+            }
+
+        }
+
 
         //Test input to check boost charges works
 
@@ -90,8 +154,11 @@ public class HUD : MonoBehaviour
     //Displays Boosts left available
     public void BoostCharges()
     {
-        boostDisplay[boostChagesRemaining-1].SetActive(false);
-        boostChagesRemaining--;
+        boostDisplayImage = boostDisplay[boostChargesRemaining-1].GetComponent<Image>();
+        isBoosting = true;
+        currentlyBoosting = true;
+        //boostDisplay[boostChagesRemaining-1].SetActive(false);
+        boostChargesRemaining--;
     }
 
     private float GetSpeedRotation()
@@ -110,18 +177,24 @@ public class HUD : MonoBehaviour
         if (canBoost)
         {
             boostTimer += Time.deltaTime;
-
-
         }
 
         if (boostTimer >= rechargeTime)
         {
-            boostChagesRemaining++;
+            boostChargesRemaining++;
+            newRechargedBoost = boostDisplay[boostChargesRemaining - 1].GetComponent<Transform>();
+            newBoostChargeAdded = true;
+            newRechargedBoostTimer = 0;
+            boostDisplayImage.fillAmount = 1;
             canBoost = false;
             boostTimer = 0f;
+            if (isBoosting == true)
+            {
+                boostRechargeWhileBoosting = true;
+            }
         }
 
-        if(!canBoost && boostChagesRemaining < maxBoosts)
+        if(!canBoost && boostChargesRemaining < maxBoosts)
         {
             canBoost = true;
         }
@@ -129,9 +202,9 @@ public class HUD : MonoBehaviour
 
     public void DisplayRefresh()
     {
-        if (boostChagesRemaining <= maxBoosts)
+        if ((boostChargesRemaining <= maxBoosts) && (boostChargesRemaining > 0))
         {
-            boostDisplay[boostChagesRemaining - 1].SetActive(true);
+            boostDisplay[boostChargesRemaining - 1].SetActive(true);
         }
     }
 
