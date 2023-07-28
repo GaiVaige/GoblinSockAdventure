@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,8 +11,15 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private AudioSource openMenuSound;
     [SerializeField] private AudioSource exitMenuSound;
 
-    private bool pauseState = false;
-    private bool audioMenuState = false;
+    public Scene scene;
+
+    public bool pauseState = false;
+    public bool audioMenuState = false;
+
+    private void Start()
+    {
+        scene = SceneManager.GetActiveScene();
+    }
 
     void Update()
     {
@@ -58,7 +66,7 @@ public class PauseMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(0.6f);
 
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene(scene.name);
     }
 
     //Options button

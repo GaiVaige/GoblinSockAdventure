@@ -44,18 +44,61 @@ public class Player_Movement_SCript_2 : MonoBehaviour
 
     public GameObject modelObject;
 
+
+
+    [Header("The Sounds")]
+    public AudioSource goSound;
+    public AudioSource music;
+    public AudioSource idleSound;
+    public PauseMenu pause;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         canJump = true;
         speed = rb.velocity;
         speed.x = moveDirection.x;
+
+        music.enabled = false;
+        goSound.enabled = false;
+        pause = FindObjectOfType<PauseMenu>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isInGameplay)
+        {
+            music.enabled = true;
 
+            if (rb.velocity.magnitude > 0)
+            {
+                goSound.enabled = true;
+                goSound.pitch = 1 + 1 * rb.velocity.magnitude / 50;
+                idleSound.enabled = false;
+            }
+            else
+            {
+                goSound.enabled = false;
+                idleSound.enabled = true;
+            }
+
+        }
+
+
+
+        if (pause.pauseState == true || pause.audioMenuState == true)
+        {
+            music.Pause();
+            goSound.Pause();
+        }
+        else
+        {
+            music.UnPause();
+            goSound.UnPause();
+        }
+
+        
 
         playerCamFOV.fieldOfView = 80 * (1 + rb.velocity.magnitude/viewClamper);
 
